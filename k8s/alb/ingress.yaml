@@ -1,0 +1,23 @@
+# ALB option, step 2 of 2: needs the AWS Load Balancer Controller installed first
+# (see scripts/install-alb-controller.sh). The controller reads this Ingress and
+# creates an Application Load Balancer in AWS.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eks-demo-app
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eks-demo-app
+                port:
+                  number: 80

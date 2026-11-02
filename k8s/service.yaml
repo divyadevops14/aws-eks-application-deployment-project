@@ -1,0 +1,18 @@
+# Simplest way to get a public URL: a Service of type LoadBalancer.
+# AWS creates a load balancer for you and gives it a public DNS name.
+# (Use this OR the ALB option in k8s/alb/, not both at the same time.)
+apiVersion: v1
+kind: Service
+metadata:
+  name: eks-demo-app
+  labels:
+    app: eks-demo-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: eks-demo-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+      protocol: TCP

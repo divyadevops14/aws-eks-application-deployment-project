@@ -1,0 +1,10 @@
+{
+  "name": "eks-demo-app",
+  "version": "1.0.0",
+  "description": "Simple web app used to practice deploying on AWS EKS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

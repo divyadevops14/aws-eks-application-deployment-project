@@ -1,0 +1,27 @@
+# eksctl cluster definition. Create with: eksctl create cluster -f eks/cluster.yaml
+# Cost-saving choices are explained in the comments.
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-demo
+  region: us-east-1
+
+# Needed by the AWS Load Balancer Controller (ALB option) to get AWS permissions
+iam:
+  withOIDC: true
+
+# No NAT gateway: saves about $0.045/hr (~$32/month). Nodes use public subnets instead.
+# Fine for learning. Real production clusters usually keep private nodes plus a NAT gateway.
+vpc:
+  nat:
+    gateway: Disable
+
+managedNodeGroups:
+  - name: demo-nodes
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 2
+    volumeSize: 20
+    privateNetworking: false

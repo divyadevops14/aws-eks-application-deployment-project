@@ -1,0 +1,18 @@
+# ALB option, step 1 of 2: an internal Service. The Ingress (ingress.yaml) puts
+# an Application Load Balancer in front of it.
+# Delete the type: LoadBalancer Service (k8s/service.yaml) before using this one.
+apiVersion: v1
+kind: Service
+metadata:
+  name: eks-demo-app
+  labels:
+    app: eks-demo-app
+spec:
+  type: ClusterIP
+  selector:
+    app: eks-demo-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+      protocol: TCP
