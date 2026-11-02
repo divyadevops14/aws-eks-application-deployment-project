@@ -76,7 +76,7 @@ pipeline {
 
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: 'aws-creds']
+                     credentialsId: 'aws-jenkins']
                 ]) {
                     bat '''
                         aws sts get-caller-identity || exit /b 1
@@ -95,7 +95,7 @@ pipeline {
 
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: 'aws-creds']
+                     credentialsId: 'aws-jenkins']
                 ]) {
                     bat '''
                         aws eks update-kubeconfig --region %AWS_REGION% --name %EKS_CLUSTER% || exit /b 1
@@ -114,7 +114,7 @@ pipeline {
 
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: 'aws-creds']
+                     credentialsId: 'aws-jenkins']
                 ]) {
                     bat '''
                         aws eks update-kubeconfig --region %AWS_REGION% --name %EKS_CLUSTER% || exit /b 1
