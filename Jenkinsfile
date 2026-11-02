@@ -21,18 +21,6 @@ pipeline {
     }
 
     stages {
-       
-       stage('Checkout') {
-           steps {
-               echo 'Downloading source code from GitHub'
-               git branch: 'main',
-                   url: 'https://github.com/divyadevops14/aws-eks-application-deployment-project.git'
-                    }
-        }
-
-        // NOTE: a Jenkins bat step only fails if the LAST command fails.
-        // Every command below ends with "|| exit /b 1" so any failure stops the stage.
-
         stage('Validate') {
             steps {
                 echo 'Checking project files and tools'
@@ -52,11 +40,23 @@ pipeline {
             }
         }
 
+        stage('Docker Diagnostics') {
+            steps {
+                echo 'Checking Docker access from Jenkins'
+                bat '''
+                    whoami
+                    docker context show
+                    docker version
+                    docker buildx ls
+                '''
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 echo 'Building Docker image'
                 bat '''
-                    docker build -t %IMAGE_URI% -f app\\Dockerfile app || exit /b 1
+                    docker build -t %IMAGE_URI% -f app/Dockerfile app || exit /b 1
                 '''
             }
         }
