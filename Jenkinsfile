@@ -15,6 +15,7 @@ pipeline {
         K8S_NAMESPACE  = 'default'
         DEPLOYMENT     = 'eks-demo-app'
         CONTAINER_NAME = 'eks-demo-app'
+
         DOCKER_CONFIG  = 'C:\\Users\\Divya\\.docker'
         DOCKER_CONTEXT = 'desktop-linux'
 
@@ -23,18 +24,22 @@ pipeline {
     }
 
     stages {
+
         stage('Validate') {
             steps {
                 echo 'Checking project files and tools'
+
                 bat '''
                     if not exist app\\Dockerfile (
                         echo Dockerfile not found
                         exit /b 1
                     )
+
                     if not exist app\\server.js (
                         echo Application file not found
                         exit /b 1
                     )
+
                     docker --version || exit /b 1
                     aws --version || exit /b 1
                     kubectl version --client || exit /b 1
@@ -45,6 +50,7 @@ pipeline {
         stage('Docker Diagnostics') {
             steps {
                 echo 'Checking Docker access from Jenkins'
+
                 bat '''
                     whoami
                     docker context show
@@ -57,6 +63,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 echo 'Building Docker image'
+
                 bat '''
                     docker build -t %IMAGE_URI% -f app/Dockerfile app || exit /b 1
                 '''
@@ -65,13 +72,17 @@ pipeline {
 
         stage('ECR Login and Push') {
             steps {
-                echo 'Authenticating with Amazon ECR and pushing the image'
+                echo 'Authenticating with Amazon ECR and pushing image'
+
                 withCredentials([
-                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                     credentialsId: 'aws-creds']
                 ]) {
                     bat '''
+                        aws sts get-caller-identity || exit /b 1
+
                         aws ecr get-login-password --region %AWS_REGION% | docker login --username AWS --password-stdin %ECR_REGISTRY% || exit /b 1
+
                         docker push %IMAGE_URI% || exit /b 1
                     '''
                 }
@@ -81,13 +92,16 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 echo 'Deploying application to Amazon EKS'
+
                 withCredentials([
-                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                     credentialsId: 'aws-creds']
                 ]) {
                     bat '''
                         aws eks update-kubeconfig --region %AWS_REGION% --name %EKS_CLUSTER% || exit /b 1
+
                         kubectl set image deployment/%DEPLOYMENT% %CONTAINER_NAME%=%IMAGE_URI% -n %K8S_NAMESPACE% || exit /b 1
+
                         kubectl rollout status deployment/%DEPLOYMENT% -n %K8S_NAMESPACE% --timeout=180s || exit /b 1
                     '''
                 }
@@ -97,14 +111,18 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 echo 'Verifying application deployment'
+
                 withCredentials([
-                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                     credentialsId: 'aws-creds']
                 ]) {
                     bat '''
                         aws eks update-kubeconfig --region %AWS_REGION% --name %EKS_CLUSTER% || exit /b 1
+
                         kubectl get pods -n %K8S_NAMESPACE% || exit /b 1
+
                         kubectl get svc -n %K8S_NAMESPACE% || exit /b 1
+
                         kubectl get ingress -n %K8S_NAMESPACE% || exit /b 1
                     '''
                 }
@@ -116,11 +134,14 @@ pipeline {
         success {
             echo "SUCCESS: ${IMAGE_URI} deployed to AWS EKS!"
         }
+
         failure {
             echo 'FAILED: Check the Jenkins console output for errors.'
         }
+
         always {
             echo 'Jenkins pipeline execution completed.'
         }
     }
 }
+
