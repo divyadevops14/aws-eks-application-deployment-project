@@ -19,9 +19,9 @@ vpc:
 
 managedNodeGroups:
   - name: demo-nodes
-    instanceType: t3.medium
-    desiredCapacity: 2
+    instanceType: t3.small
+    desiredCapacity: 1
     minSize: 1
-    maxSize: 2
+    maxSize: 1
     volumeSize: 20
     privateNetworking: false
