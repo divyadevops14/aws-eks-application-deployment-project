@@ -21,13 +21,13 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                echo 'Downloading source code from GitHub'
-                git branch: 'main',
-                    url: 'https://github.com/divyadevops14/aws-eks-application-deployment.git'
-            }
+       
+       stage('Checkout') {
+           steps {
+               echo 'Downloading source code from GitHub'
+               git branch: 'main',
+                   url: 'https://github.com/divyadevops14/aws-eks-application-deployment-project.git'
+                    }
         }
 
         // NOTE: a Jenkins bat step only fails if the LAST command fails.
