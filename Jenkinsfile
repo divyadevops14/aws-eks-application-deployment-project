@@ -15,6 +15,8 @@ pipeline {
         K8S_NAMESPACE  = 'default'
         DEPLOYMENT     = 'eks-demo-app'
         CONTAINER_NAME = 'eks-demo-app'
+        DOCKER_CONFIG  = 'C:\\Users\\Divya\\.docker'
+        DOCKER_CONTEXT = 'desktop-linux'
 
         ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         IMAGE_URI    = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${BUILD_NUMBER}"
