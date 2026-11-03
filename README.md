@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🚀 AWS EKS ECR Application Development & Deployment
 
 ---
