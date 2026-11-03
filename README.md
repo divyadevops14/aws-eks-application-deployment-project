@@ -2,6 +2,8 @@
 
 # 🚀 AWS EKS ECR Application Development & Deployment
 
+---
+
 ## 📑 Table of Contents
 
 * [Overview](#-overview)
