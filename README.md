@@ -253,13 +253,13 @@ The Jenkins job **`aws-eks-ecr-cicd-pipeline`** automates the manual flow: build
 
 | # | Evidence | What it demonstrates |
 |---|---|---|
-| 1 | ![Architecture overview](docs/images/01-project-architecture-overview.png) | Project architecture, tools, repository structure, deployment workflow and key highlights. |
-| 2 | ![Local Docker test](docs/images/02-local-docker-app-test.jpg) | Image `eks-demo-app:v1` exists locally; the container serves the app on port `3000` and the browser shows the welcome page. |
-| 3 | ![ECR push](docs/images/03-ecr-repository-and-image-push.jpg) | ECR login succeeds and image layers are pushed; the `v1` tag is visible in the ECR console. |
-| 4 | ![ECR repository](docs/images/04-ecr-repository-creation.jpg) | ECR repository `eks-demo-app` created in `us-east-1` with scan-on-push enabled and AES-256 encryption. |
-| 5 | ![EKS node group](docs/images/05-eks-nodegroup-and-kubernetes-health.jpg) | Node group `demo-nodes` is `ACTIVE`; CLI shows a node in `Ready` state and `kube-system` pods running. |
-| 6 | ![ALB deployment](docs/images/06-eks-application-alb-deployment.jpg) | Rollout completes; 2 pods `Running` and `1/1` Ready; Ingress has an ALB hostname; `curl` returns `200 OK`; `/health` returns `{"status":"ok"}`; app opens in the browser. |
-| 7 | ![Jenkins stage view](docs/images/07-jenkins-pipeline-stage-view.jpg) | Jenkins job `aws-eks-ecr-cicd-pipeline` Stage View: build `#3` successful, earlier builds `#1` and `#2` failed. |
+| 1 | ![Architecture overview] | Project architecture, tools, repository structure, deployment workflow and key highlights. |
+| 2 | ![Local Docker test] | Image `eks-demo-app:v1` exists locally; the container serves the app on port `3000` and the browser shows the welcome page. |
+| 3 | ![ECR push] | ECR login succeeds and image layers are pushed; the `v1` tag is visible in the ECR console. |
+| 4 | ![ECR repository] | ECR repository `eks-demo-app` created in `us-east-1` with scan-on-push enabled and AES-256 encryption. |
+| 5 | ![EKS node group] | Node group `demo-nodes` is `ACTIVE`; CLI shows a node in `Ready` state and `kube-system` pods running. |
+| 6 | ![ALB deployment] | Rollout completes; 2 pods `Running` and `1/1` Ready; Ingress has an ALB hostname; `curl` returns `200 OK`; `/health` returns `{"status":"ok"}`; app opens in the browser. |
+| 7 | ![Jenkins stage view] | Jenkins job `aws-eks-ecr-cicd-pipeline` Stage View: build `#3` successful, earlier builds `#1` and `#2` failed. |
 
 ### End-to-end workflow demonstrated
 
